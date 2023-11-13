@@ -1,32 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"net/http"
 
-	"github.com/go-chi/chi"
-	"github.com/go-chi/chi/middleware"
+	"github.com/chriscooper0/go-microservice/application"
 )
 
 func main() {
+	app := application.New()
 
-	router := chi.NewRouter();
-	router.Use(middleware.Logger);
-	
-	router.Get("/hello", basicHandler)
+	err := app.Start(context.TODO())
 
-	server := &http.Server{
-		Addr: ":3000",
-		Handler: router,
+	if err != nil {
+		fmt.Println("failed to start app: ", err)
 	}
-
-err := server.ListenAndServe()
-
-if err != nil {
-		fmt.Println("failed to listen to server", err)
-	}
-}
-
-func basicHandler(w http.ResponseWriter, r *http.Request){
-	w.Write([]byte("Hello world"))
 }
